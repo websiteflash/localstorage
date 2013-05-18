@@ -1,7 +1,78 @@
+<!DOCTYPE html>
 <html>
-<head></head>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="description" content="刮刮乐" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="white" />
+<title>localstroge test</title>
+<style type="text/css">
+  label{
+		width:80px;
+		text-align: right;
+		display: inline-block;
+	}
 
+	button{
+		margin-left: 80px;
+	}
+</style>
+</head>
 <body>
-<h1>Test cookie and localstroge in weichat!</h1>
+	<label>key:</label><input type="text" name="stroge_k"><br>
+	<label>value:</label><input type="text" name="stroge_v"><br>
+	<button id="add_localstroge">add localstroge</button><br>
+
+	<label>key:</label><input type="text" name="cookie_k"><br>
+	<label>value:</label><input type="text" name="cookie_v"><br>
+	<label>expires:</label><input type="text" name="cookie_e"><br>
+	<button id="add_cookie">add cookie</button><br>
+	<div id="output"></div>
 </body>
+<script type="text/javascript" src="http://imgcache.gtimg.cn/club/travel/js/lib/zepto.min.js"></script>
+<script type="text/javascript">
+	$("#add_localstroge").on('click', function(){
+		var key = $('input[name="stroge_k"]').val();
+		var value = $('input[name="stroge_v"]').val();
+
+		window.localStorage.setItem(key, value);
+
+		update();
+	});
+
+	$('#add_cookie').on('click', function(){
+		var key = $('input[name="cookie_k"]').val();
+		var value = $('input[name="cookie_v"]').val();
+		var days = $('input[name="cookie_v"]').val();
+
+		var t = new Date();
+		t.setDate(t.getDate() + days);
+
+		document.cookie = [key, '=', encodeURIComponent(value), '; expires=', t.toUTCString()].join('');
+
+		update();
+	});
+
+	function update(){
+		var html = [];
+		html.push('<h4>localstroge:</h4>');
+
+		var local = window.localStorage;
+		for(var key in local){
+			html.push(key + '=' + local[key]);
+		}
+
+		html.push('<h4>cookie:</h4>');
+		var cookie = document.cookie;
+		html = html.concat(cookie.split(';'));
+
+		$('#output').html(html.join('<br>'));
+	}
+
+	$(document).ready(function(){
+		update();
+	});
+</script>
 </html>
